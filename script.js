@@ -59,7 +59,7 @@ function renderTasks() {
   });
   const total = taskList.length;
   const completed = taskList.filter(t => t.completed).length;
-  document.querySelector('.stats').innerText = `Усього тасок: ${total} | Виконано: ${completed}`;
+  document.querySelector('.stats').innerText = `Summary tasks: ${total} | Completed: ${completed}`;
 }
 
 renderTasks();
