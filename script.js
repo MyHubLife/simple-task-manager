@@ -3,6 +3,21 @@ const addTaskBtn = document.getElementById('addTaskBtn');
 const viewTaskCards = document.querySelector('.view-task-cards');
 
 let taskList = JSON.parse(localStorage.getItem('tasks')) || [];
+
+const fetchQuote = async () => {
+  try {
+    const response = await fetch('https://api.allorigins.win/get?url=https://zenquotes.io/api/random');
+    if (!response.ok) throw new Error('Network response was not ok');
+    const data = await response.json();
+    const quoteData = JSON.parse(data.contents);
+    const text = quoteData[0].q;
+    const author = quoteData[0].a;
+    document.getElementById('quote').textContent = `"${text}" — ${author}`;
+  } catch (error) {
+    console.error('Error fetching quote:', error);
+    document.getElementById(`quote`).textContent = 'Stay positive even without a quote!';
+  }
+}
 fetchQuote();
 
 addTaskBtn.addEventListener('click', () => {
@@ -23,7 +38,7 @@ addTaskBtn.addEventListener('click', () => {
   }
 });
 
-function renderTasks() {
+const renderTasks = () => {
   viewTaskCards.innerHTML = '';
 
   taskList.forEach(task => {
@@ -48,13 +63,13 @@ function renderTasks() {
   updateStats();
 }
 
-function deleteTask(id) {
+const deleteTask = (id) => {
   taskList = taskList.filter(task => task.id !== id);
   saveLocalStorage();
   renderTasks();
 }
 
-function toggleTask(id) { 
+const toggleTask = (id) => { 
   const task = taskList.find(task => task.id === id);
   if (task) {
     task.completed = !task.completed;
@@ -63,29 +78,14 @@ function toggleTask(id) {
   }
 }
 
-function saveLocalStorage() {
+const saveLocalStorage = () => {
   localStorage.setItem('tasks', JSON.stringify(taskList));
 }
 
-function updateStats() {
+const updateStats = () => {
   const total = taskList.length;
   const completed = taskList.filter(t => t.completed).length;
   document.querySelector('.stats').innerText = `Summary tasks: ${total} | Completed: ${completed}`;
-}
-
-async function fetchQuote() {
-  try {
-    const response = await fetch('https://api.allorigins.win/get?url=https://zenquotes.io/api/random');
-    if (!response.ok) throw new Error('Network response was not ok');
-    const data = await response.json();
-    const quoteData = JSON.parse(data.contents);
-    const text = quoteData[0].q;
-    const author = quoteData[0].a;
-    document.getElementById('quote').textContent = `"${text}" — ${author}`;
-  } catch (error) {
-    console.error('Error fetching quote:', error);
-    document.getElementById(`quote`).textContent = 'Stay positive even without a quote!';
-  }
 }
 
 // function fetchQuoteOld() {
