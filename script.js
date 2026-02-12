@@ -10,8 +10,11 @@ const fetchQuote = async () => {
     if (!response.ok) throw new Error('Network response was not ok');
     const data = await response.json();
     const quoteData = JSON.parse(data.contents);
-    const text = quoteData[0].q;
-    const author = quoteData[0].a;
+    console.log("Ось що прийшло з сервера:", quoteData);
+    // const text = quoteData[0].q;
+    // const author = quoteData[0].a;
+    // document.getElementById('quote').textContent = `"${text}" — ${author}`;
+    const { q: text, a: author } = quoteData[0];
     document.getElementById('quote').textContent = `"${text}" — ${author}`;
   } catch (error) {
     console.error('Error fetching quote:', error);
@@ -41,27 +44,52 @@ addTaskBtn.addEventListener('click', () => {
 const renderTasks = () => {
   viewTaskCards.innerHTML = '';
 
-  taskList.forEach(task => {
+  taskList.forEach(({id, completed, created_at, text}) => {
     const taskCard = document.createElement('article');
-    const taskDone = task.completed ? 'done' : '';
+    const taskDone = completed ? 'done' : '';
     taskCard.className = `task-card ${taskDone}`;
     
     taskCard.innerHTML = `
-      <div class="created-at">${task.created_at}</div>
-      <div class="task-text">${task.text}</div>
+      <div class="created-at">${created_at}</div>
+      <div class="task-text">${text}</div>
       <button class="delete-btn">Delete</button>
     `;
 
     const textElement = taskCard.querySelector('.task-text');
-    textElement.addEventListener('click', () => toggleTask(task.id));
+    textElement.addEventListener('click', () => toggleTask(id));
 
     const deleteBtn = taskCard.querySelector('.delete-btn');
-    deleteBtn.addEventListener('click', () => deleteTask(task.id));
+    deleteBtn.addEventListener('click', () => deleteTask(id));
 
     viewTaskCards.appendChild(taskCard);
   });
   updateStats();
 }
+
+// const renderTasks = () => {
+//   viewTaskCards.innerHTML = '';
+
+//   taskList.forEach(task => {
+//     const taskCard = document.createElement('article');
+//     const taskDone = task.completed ? 'done' : '';
+//     taskCard.className = `task-card ${taskDone}`;
+    
+//     taskCard.innerHTML = `
+//       <div class="created-at">${task.created_at}</div>
+//       <div class="task-text">${task.text}</div>
+//       <button class="delete-btn">Delete</button>
+//     `;
+
+//     const textElement = taskCard.querySelector('.task-text');
+//     textElement.addEventListener('click', () => toggleTask(task.id));
+
+//     const deleteBtn = taskCard.querySelector('.delete-btn');
+//     deleteBtn.addEventListener('click', () => deleteTask(task.id));
+
+//     viewTaskCards.appendChild(taskCard);
+//   });
+//   updateStats();
+// }
 
 const deleteTask = (id) => {
   taskList = taskList.filter(task => task.id !== id);
