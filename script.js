@@ -15,26 +15,11 @@ addTaskBtn.addEventListener('click', () => {
     };
     
     taskList.push(newTask);
-    localStorage.setItem('tasks', JSON.stringify(taskList));
+    saveLocalStorage();
     renderTasks();
     taskInput.value = '';
   }
 });
-
-function deleteTask(id) {
-  taskList = taskList.filter(task => task.id !== id);
-  localStorage.setItem('tasks', JSON.stringify(taskList));
-  renderTasks();
-}
-
-function toggleTask(id) { 
-  const task = taskList.find(task => task.id === id);
-  if (task) {
-    task.completed = !task.completed;
-    localStorage.setItem('tasks', JSON.stringify(taskList));
-    renderTasks();
-  }
-}
 
 function renderTasks() {
   viewTaskCards.innerHTML = '';
@@ -57,6 +42,29 @@ function renderTasks() {
 
     viewTaskCards.appendChild(taskCard);
   });
+  updateStats();
+}
+
+function deleteTask(id) {
+  taskList = taskList.filter(task => task.id !== id);
+  saveLocalStorage();
+  renderTasks();
+}
+
+function toggleTask(id) { 
+  const task = taskList.find(task => task.id === id);
+  if (task) {
+    task.completed = !task.completed;
+    saveLocalStorage();
+    renderTasks();
+  }
+}
+
+function saveLocalStorage() {
+  localStorage.setItem('tasks', JSON.stringify(taskList));
+}
+
+function updateStats() {
   const total = taskList.length;
   const completed = taskList.filter(t => t.completed).length;
   document.querySelector('.stats').innerText = `Summary tasks: ${total} | Completed: ${completed}`;
