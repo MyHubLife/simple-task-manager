@@ -11,10 +11,18 @@ const fetchQuote = async () => {
     const data = await response.json();
     const quoteData = JSON.parse(data.contents);
     console.log("Ось що прийшло з сервера:", quoteData);
+    // Var 1 - simple
     // const text = quoteData[0].q;
     // const author = quoteData[0].a;
     // document.getElementById('quote').textContent = `"${text}" — ${author}`;
-    const { q: text, a: author } = quoteData[0];
+    
+    // var 2 - destructuring assignment
+    // const { q: text, a: author } = quoteData[0];
+    // document.getElementById('quote').textContent = `"${text}" — ${author}`;
+    
+    // var 3 - destructuring assignment + array destructuring
+    const [firstQuote] = quoteData;
+    const { q: text, a: author } = firstQuote;
     document.getElementById('quote').textContent = `"${text}" — ${author}`;
   } catch (error) {
     console.error('Error fetching quote:', error);
@@ -44,7 +52,7 @@ addTaskBtn.addEventListener('click', () => {
 const renderTasks = () => {
   viewTaskCards.innerHTML = '';
 
-  taskList.forEach(({id, completed, created_at, text}) => {
+  taskList.forEach(({id, created_at, text, completed}) => {
     const taskCard = document.createElement('article');
     const taskDone = completed ? 'done' : '';
     taskCard.className = `task-card ${taskDone}`;
@@ -73,7 +81,7 @@ const renderTasks = () => {
 //     const taskCard = document.createElement('article');
 //     const taskDone = task.completed ? 'done' : '';
 //     taskCard.className = `task-card ${taskDone}`;
-    
+
 //     taskCard.innerHTML = `
 //       <div class="created-at">${task.created_at}</div>
 //       <div class="task-text">${task.text}</div>
@@ -98,12 +106,21 @@ const deleteTask = (id) => {
 }
 
 const toggleTask = (id) => { 
-  const task = taskList.find(task => task.id === id);
-  if (task) {
-    task.completed = !task.completed;
-    saveLocalStorage();
-    renderTasks();
-  }
+  taskList = taskList.map(task => {
+        if (task.id === id) {
+            return { ...task, completed: !task.completed };
+        }
+        return task;
+    });
+  saveLocalStorage();
+  renderTasks();
+
+  // const task = taskList.find(task => task.id === id);
+  // if (task) {
+  //   task.completed = !task.completed;
+  //   saveLocalStorage();
+  //   renderTasks();
+  // }
 }
 
 const saveLocalStorage = () => {
