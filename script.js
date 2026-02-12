@@ -3,6 +3,7 @@ const addTaskBtn = document.getElementById('addTaskBtn');
 const viewTaskCards = document.querySelector('.view-task-cards');
 
 let taskList = JSON.parse(localStorage.getItem('tasks')) || [];
+fetchQuote();
 
 addTaskBtn.addEventListener('click', () => {
   const taskText = taskInput.value.trim();
@@ -70,6 +71,17 @@ function updateStats() {
   const total = taskList.length;
   const completed = taskList.filter(t => t.completed).length;
   document.querySelector('.stats').innerText = `Summary tasks: ${total} | Completed: ${completed}`;
+}
+
+function fetchQuote() {
+  fetch('https://api.allorigins.win/get?url=https://zenquotes.io/api/random')
+    .then(response => response.json())
+    .then(data => {
+      const quoteData = JSON.parse(data.contents); // бо цей API повертає дані специфічно
+      const text = quoteData[0].q;
+      const author = quoteData[0].a;
+      document.getElementById('quote').textContent = `"${text}" — ${author}`;
+    });
 }
 
 renderTasks();
