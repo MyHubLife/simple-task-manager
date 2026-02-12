@@ -10,6 +10,7 @@ addTaskBtn.addEventListener('click', () => {
   if (taskText) { 
   let newTask = {
     id: Date.now(),
+    created_at: new Date().toLocaleString(),
     text: taskInput.value.trim(),
     completed: false
     };
@@ -30,6 +31,7 @@ function renderTasks() {
     taskCard.className = `task-card ${taskDone}`;
     
     taskCard.innerHTML = `
+      <div class="created-at">${task.created_at}</div>
       <div class="task-text">${task.text}</div>
       <button class="delete-btn">Delete</button>
     `;
