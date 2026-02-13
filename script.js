@@ -3,6 +3,7 @@ const addTaskBtn = document.getElementById('addTaskBtn');
 const viewTaskCards = document.querySelector('.view-task-cards');
 
 let taskList = JSON.parse(localStorage.getItem('tasks')) || [];
+let searchTerm ='';
 
 const fetchQuote = async () => {
   try {
@@ -52,10 +53,19 @@ addTaskBtn.addEventListener('click', () => {
 const renderTasks = () => {
   viewTaskCards.innerHTML = '';
 
-  taskList.forEach(({id, created_at, text, completed}) => {
+  const filteredTasks = taskList.filter(task => 
+    task.text.toLowerCase().includes(searchTerm)
+  );
+  filteredTasks.forEach(({id, created_at, text, completed}) => {
     const taskCard = document.createElement('article');
     const taskDone = completed ? 'done' : '';
     taskCard.className = `task-card ${taskDone}`;
+  
+  // OLD version without search
+  // taskList.forEach(({id, created_at, text, completed}) => {
+  //   const taskCard = document.createElement('article');
+  //   const taskDone = completed ? 'done' : '';
+  //   taskCard.className = `task-card ${taskDone}`;
     
     taskCard.innerHTML = `
       <div class="created-at">${created_at}</div>
@@ -143,5 +153,10 @@ const updateStats = () => {
 //       document.getElementById('quote').textContent = `"${text}" — ${author}`;
 //     });
 // }
+
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  searchTerm = e.target.value.toLowerCase();
+  renderTasks();
+});
 
 renderTasks();

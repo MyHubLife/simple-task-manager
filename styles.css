@@ -64,7 +64,23 @@ body{
   font-style: italic;
   color: gray;
 }
-
+.search-input {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+.search-input input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 400px;
+}
+.search-input input:focus {
+  outline: none;
+  border-color: #dbca0e;
+  box-shadow: 0 0 5px rgba(219, 202, 14, 0.5);
+}
 .view-task-cards {
   display: flex;
   flex-direction: column-reverse;
